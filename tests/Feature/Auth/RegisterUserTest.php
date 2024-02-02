@@ -19,6 +19,7 @@ class RegisterUserTest extends TestCase
             'email' => 'joe@doe.com',
             'document' => '12345678910',
             'password' => 'password',
+            'type' => 1,
         ]);
 
         $response->assertStatus(Response::HTTP_CREATED);
