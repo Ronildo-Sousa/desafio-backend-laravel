@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Enums\UserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,13 +20,32 @@ class RegisterUserTest extends TestCase
             'email' => 'joe@doe.com',
             'document' => '12345678910',
             'password' => 'password',
-            'type' => 1,
+            'type' => UserType::Regular->value,
         ]);
 
         $response->assertStatus(Response::HTTP_CREATED);
         $this->assertDatabaseHas('users', [
             'email' => 'joe@doe.com',
             'document' => '12345678910',
+        ]);
+    }
+
+    /** @test */
+    public function shopkeeper_user_should_be_able_to_register(): void
+    {
+        $response = $this->post(route('auth.register'), [
+            'full_name' => 'Joe Doe',
+            'email' => 'joe@doe.com',
+            'document' => '12345678910',
+            'password' => 'password',
+            'type' => UserType::Shopkeeper->value,
+        ]);
+
+        $response->assertStatus(Response::HTTP_CREATED);
+        $this->assertDatabaseHas('users', [
+            'email' => 'joe@doe.com',
+            'document' => '12345678910',
+            'type' => UserType::Shopkeeper->value,
         ]);
     }
 }
