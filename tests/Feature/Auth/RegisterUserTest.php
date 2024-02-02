@@ -36,7 +36,7 @@ class RegisterUserTest extends TestCase
         $response = $this->postJson(route('auth.register'), [
             'full_name' => 'Joe Doe',
             'email' => 'joe@doe.com',
-            'document' => '12345678910',
+            'document' => '12345678910124',
             'password' => 'password',
             'type' => UserType::Shopkeeper->value,
         ]);
@@ -44,7 +44,7 @@ class RegisterUserTest extends TestCase
         $response->assertStatus(Response::HTTP_CREATED);
         $this->assertDatabaseHas('users', [
             'email' => 'joe@doe.com',
-            'document' => '12345678910',
+            'document' => '12345678910124',
             'type' => UserType::Shopkeeper->value,
         ]);
     }
@@ -68,5 +68,28 @@ class RegisterUserTest extends TestCase
             'password' => __('validation.required', ['attribute' => 'password']),
             'type' => __('validation.required', ['attribute' => 'type']),
         ]);
+
+        $this->assertDatabaseEmpty('users');
+    }
+
+    /** @test */
+    public function user_should_have_a_valid_type(): void
+    {
+        $response = $this->postJson(route('auth.register'), [
+            'full_name' => 'Joe Doe',
+            'email' => 'joe@doe1.com',
+            'document' => '12345666610',
+            'password' => 'password',
+            'type' => 'invalid type',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertDatabaseMissing('users', ['document' => '12345666610']);
+    }
+
+    /** @test */
+    public function after_register_user_must_have_a_wallet(): void
+    {
+        //TODO
     }
 }
