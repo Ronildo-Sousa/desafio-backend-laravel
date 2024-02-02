@@ -15,7 +15,7 @@ class RegisterUserTest extends TestCase
     /** @test */
     public function regular_user_should_be_able_to_register(): void
     {
-        $response = $this->post(route('auth.register'), [
+        $response = $this->postJson(route('auth.register'), [
             'full_name' => 'Joe Doe',
             'email' => 'joe@doe.com',
             'document' => '12345678910',
@@ -33,7 +33,7 @@ class RegisterUserTest extends TestCase
     /** @test */
     public function shopkeeper_user_should_be_able_to_register(): void
     {
-        $response = $this->post(route('auth.register'), [
+        $response = $this->postJson(route('auth.register'), [
             'full_name' => 'Joe Doe',
             'email' => 'joe@doe.com',
             'document' => '12345678910',
@@ -46,6 +46,27 @@ class RegisterUserTest extends TestCase
             'email' => 'joe@doe.com',
             'document' => '12345678910',
             'type' => UserType::Shopkeeper->value,
+        ]);
+    }
+
+    /** @test */
+    public function users_should_send_all_fields_to_register(): void
+    {
+        $response = $this->postJson(route('auth.register'), [
+            'full_name' => '',
+            'email' => '',
+            'document' => '',
+            'password' => '',
+            'type' => '',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors([
+            'full_name' => __('validation.required', ['attribute' => 'full name']),
+            'email' => __('validation.required', ['attribute' => 'email']),
+            'document' => __('validation.required', ['attribute' => 'document']),
+            'password' => __('validation.required', ['attribute' => 'password']),
+            'type' => __('validation.required', ['attribute' => 'type']),
         ]);
     }
 }
