@@ -90,6 +90,14 @@ class RegisterUserTest extends TestCase
     /** @test */
     public function after_register_user_must_have_a_wallet(): void
     {
-        //TODO
+        $this->postJson(route('auth.register'), [
+            'full_name' => 'Joe Doe',
+            'email' => 'joe@doe.com',
+            'document' => '12345678910',
+            'password' => 'password',
+            'type' => UserType::Regular->value,
+        ]);
+
+        $this->assertDatabaseCount('wallets', 1);
     }
 }

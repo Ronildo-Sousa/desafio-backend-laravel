@@ -12,6 +12,7 @@ class RegisterUsercontroller extends Controller
     public function __invoke(RegisterUserRequest $request)
     {
         $user = User::query()->create($request->validated());
+        $user->wallet()->create();
 
         return response()->json([
             'message' => 'user created',
