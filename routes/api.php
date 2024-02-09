@@ -1,19 +1,14 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\LoginUsercontroller;
+use App\Http\Controllers\Auth\RegisterUsercontroller;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+Route::name('auth.')->group(function(){
+    Route::post('/register', RegisterUsercontroller::class)->name('register');
+    Route::post('/login', LoginUsercontroller::class)->name('login');
+});
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function(){
+    Route::get('/transacations', fn() => 'transactions endpoint')->name('transactions.index');
 });
