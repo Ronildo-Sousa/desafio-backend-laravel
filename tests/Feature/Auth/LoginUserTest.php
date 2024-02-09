@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +15,30 @@ class LoginUserTest extends TestCase
     /** @test */
     public function users_should_be_able_to_login(): void
     {
-        // TODO
+        $user = User::factory()->create();
+        $response = $this->postJson(route('auth.login'), [
+            'email' => $user->email, 
+            'password' => 'password', 
+        ]);
+        
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure(['token']);
+
+        $token = $response->json()['token'];
+        $this->getJson(route('transactions.index'), ['Authorization' => "Bearer {$token}"])
+            ->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function users_should_be_able_to_login_with_wrong_credentials(): void
+    {
+        $user = User::factory()->create();
+        $response = $this->postJson(route('auth.login'), [
+            'email' => $user->email, 
+            'password' => 'wrong password', 
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     /** @test */

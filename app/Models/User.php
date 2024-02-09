@@ -32,4 +32,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(Wallet::class);
     }
+
+    public function getNewToken(): string
+    {
+        $this->tokens()->delete();
+
+        return $this->createToken($this->email)->plainTextToken;
+    }
 }
