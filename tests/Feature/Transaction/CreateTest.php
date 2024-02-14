@@ -17,7 +17,7 @@ class CreateTest extends TestCase
         $user2 = $this->makeUser();
 
         $this->actingAs($user)
-            ->postJson(route('transaction.store'), [
+            ->postJson(route('transactions.store'), [
                 'sender' => $user->wallet->id,
                 'receiver' => $user2->wallet->id,
                 'amount' => 50,

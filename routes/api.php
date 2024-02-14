@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginUsercontroller;
 use App\Http\Controllers\Auth\RegisterUsercontroller;
+use App\Http\Controllers\Transaction\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('auth.')->group(function(){
@@ -10,5 +11,5 @@ Route::name('auth.')->group(function(){
 });
 
 Route::middleware('auth:sanctum')->group(function(){
-    Route::get('/transacations', fn() => 'transactions endpoint')->name('transactions.index');
+    Route::apiResource('transactions', TransactionController::class);
 });
