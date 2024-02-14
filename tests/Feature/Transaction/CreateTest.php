@@ -18,8 +18,8 @@ class CreateTest extends TestCase
 
         $this->actingAs($user)
             ->postJson(route('transactions.store'), [
-                'sender' => $user->wallet->id,
-                'receiver' => $user2->wallet->id,
+                'sender_id' => $user->wallet->id,
+                'receiver_id' => $user2->wallet->id,
                 'amount' => 50,
             ])
             ->assertStatus(Response::HTTP_CREATED);
