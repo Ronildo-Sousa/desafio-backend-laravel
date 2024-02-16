@@ -26,6 +26,11 @@ class TransactionService
             throw new Exception('insufficient balance', Response::HTTP_UNAUTHORIZED);
         }
 
+        $isAuthorized = (new AuthorizeTransactionService)->authorize();
+        if (!$isAuthorized) {
+            throw new Exception('unauthorized', Response::HTTP_UNAUTHORIZED);
+        }
+
         $sender->update();
         $receiver->update();
 
