@@ -54,4 +54,19 @@ class CreateTest extends TestCase
         $this->assertEquals($user2->wallet->balance, 0);
         $this->assertEquals($user->wallet->balance, 120);
     }
+
+    /** @test */
+    public function user_must_have_balance_to_make_a_transaction()
+    {
+        $user = $this->makeUser(balance: 10);
+        $user2 = $this->makeUser();
+
+        $this->actingAs($user)
+            ->postJson(route('transactions.store'), [
+                'sender_id' => $user->wallet->id,
+                'receiver_id' => $user2->wallet->id,
+                'amount' => 50,
+            ])
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
 }
