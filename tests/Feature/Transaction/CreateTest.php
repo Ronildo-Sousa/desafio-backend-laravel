@@ -13,7 +13,7 @@ class CreateTest extends TestCase
     /** @test */
     public function regular_user_can_make_a_transaction()
     {
-        $user = $this->makeUser(balance: 100);
+        $user = $this->makeUser(balance: 120);
         $user2 = $this->makeUser();
 
         $this->actingAs($user)
@@ -24,6 +24,11 @@ class CreateTest extends TestCase
             ])
             ->assertStatus(Response::HTTP_CREATED);
 
+        $user->refresh();
+        $user2->refresh();
+
         $this->assertDatabaseCount('transactions', 1);
+        $this->assertEquals($user2->wallet->balance, 50);
+        $this->assertEquals($user->wallet->balance, 70);
     }
 }

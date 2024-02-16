@@ -3,14 +3,19 @@ namespace App\DTOs;
 
 use App\DTOs\DTOInterface;
 use App\Enums\TransactionStatus;
+use Money\Currencies\ISOCurrencies;
+use Money\Money;
+use Money\Formatter\DecimalMoneyFormatter;
+use Money\Formatter\IntlMoneyFormatter;
+use NumberFormatter;
 
 class TransactionDTO implements DTOInterface
 {   
     public function __construct(
-        private readonly int $sender_id,
-        private readonly int $receiver_id,
-        private readonly float $amount,
-        private readonly ?string $status,
+        public readonly int $sender_id,
+        public readonly int $receiver_id,
+        public readonly float $amount,
+        public readonly ?string $status,
     ){    
     }
 
